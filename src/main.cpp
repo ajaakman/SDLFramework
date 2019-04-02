@@ -1,4 +1,15 @@
-#include <SDL.h>
+#ifdef __EMSCRIPTEN__
+	#include <emscripten/emscripten.h>
+	#include <functional>
+
+	static void dispatch_main(void* fp)
+	{
+		std::function<void()>* func = (std::function<void()>*)fp;
+		(*func)();
+	}
+#endif
+
+#include <SDL2/SDL.h>
 
 int main(int argc, char* args[])
 {
@@ -20,7 +31,23 @@ int main(int argc, char* args[])
 
 			SDL_UpdateWindowSurface(window);
 
-			SDL_Delay(2000);
+			bool quit = false;
+
+			SDL_Event e;
+#ifdef __EMSCRIPTEN__
+			std::function<void()> mainLoop = [&]() {
+#else
+			while (!quit) {
+#endif
+				while (SDL_PollEvent(&e) != 0)
+				{
+					if (e.type == SDL_QUIT)
+						quit = true;
+				}
+			}
+#ifdef __EMSCRIPTEN__
+			; emscripten_set_main_loop_arg(dispatch_main, &mainLoop, 0, 1);
+#endif
 		}
 	}
 

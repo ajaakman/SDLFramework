@@ -1,0 +1,1 @@
+emcc -std=c++11 "src/main.cpp" -s USE_SDL=2 -O3 -o web/app.html
