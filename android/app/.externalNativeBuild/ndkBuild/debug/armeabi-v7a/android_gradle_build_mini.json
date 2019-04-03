@@ -1,0 +1,29 @@
+{
+  "buildFiles": [
+    "C:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\jni\\Android.mk",
+    "C:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\jni\\Application.mk"
+  ],
+  "cleanCommands": [
+    "C:\\NVPACK\\android-sdk-windows\\ndk-bundle\\ndk-build.cmd NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003dC:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\jni\\Android.mk NDK_APPLICATION_MK\u003dC:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\jni\\Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003dC:/dev/CPlusPlus/Portfolio/SDLFramework/android/app/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003dC:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\build\\intermediates\\ndkBuild\\debug\\lib APP_PLATFORM\u003dandroid-14 clean"
+  ],
+  "libraries": {
+    "hidapi-debug-armeabi-v7a": {
+      "artifactName": "hidapi",
+      "buildCommand": "C:\\NVPACK\\android-sdk-windows\\ndk-bundle\\ndk-build.cmd NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003dC:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\jni\\Android.mk NDK_APPLICATION_MK\u003dC:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\jni\\Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003dC:/dev/CPlusPlus/Portfolio/SDLFramework/android/app/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003dC:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\build\\intermediates\\ndkBuild\\debug\\lib APP_PLATFORM\u003dandroid-14 C:/dev/CPlusPlus/Portfolio/SDLFramework/android/app/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libhidapi.so",
+      "abi": "armeabi-v7a",
+      "output": "C:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\armeabi-v7a\\libhidapi.so"
+    },
+    "main-debug-armeabi-v7a": {
+      "artifactName": "main",
+      "buildCommand": "C:\\NVPACK\\android-sdk-windows\\ndk-bundle\\ndk-build.cmd NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003dC:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\jni\\Android.mk NDK_APPLICATION_MK\u003dC:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\jni\\Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003dC:/dev/CPlusPlus/Portfolio/SDLFramework/android/app/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003dC:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\build\\intermediates\\ndkBuild\\debug\\lib APP_PLATFORM\u003dandroid-14 C:/dev/CPlusPlus/Portfolio/SDLFramework/android/app/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libmain.so",
+      "abi": "armeabi-v7a",
+      "output": "C:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\armeabi-v7a\\libmain.so"
+    },
+    "SDL2-debug-armeabi-v7a": {
+      "artifactName": "SDL2",
+      "buildCommand": "C:\\NVPACK\\android-sdk-windows\\ndk-bundle\\ndk-build.cmd NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003dC:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\jni\\Android.mk NDK_APPLICATION_MK\u003dC:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\jni\\Application.mk APP_ABI\u003darmeabi-v7a NDK_ALL_ABIS\u003darmeabi-v7a NDK_DEBUG\u003d1 APP_PLATFORM\u003dandroid-16 NDK_OUT\u003dC:/dev/CPlusPlus/Portfolio/SDLFramework/android/app/build/intermediates/ndkBuild/debug/obj NDK_LIBS_OUT\u003dC:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\build\\intermediates\\ndkBuild\\debug\\lib APP_PLATFORM\u003dandroid-14 C:/dev/CPlusPlus/Portfolio/SDLFramework/android/app/build/intermediates/ndkBuild/debug/obj/local/armeabi-v7a/libSDL2.so",
+      "abi": "armeabi-v7a",
+      "output": "C:\\dev\\CPlusPlus\\Portfolio\\SDLFramework\\android\\app\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\armeabi-v7a\\libSDL2.so"
+    }
+  }
+}

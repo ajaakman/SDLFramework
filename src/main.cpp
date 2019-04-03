@@ -9,7 +9,8 @@
 	}
 #endif
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
+
 
 int main(int argc, char* args[])
 {
@@ -21,7 +22,15 @@ int main(int argc, char* args[])
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 	else
 	{
-		window = SDL_CreateWindow("SDL Framework", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_SHOWN);
+		if (!SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1"))
+		{
+			SDL_Log("Warning: Linear texture filtering not enabled!");
+		}
+#ifndef NOT_FULLSCREEN
+		SDL_DisplayMode displayMode;
+		if (SDL_GetCurrentDisplayMode(0, &displayMode) == 0)		
+			window = SDL_CreateWindow("SDL Framework", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, displayMode.w, displayMode.h, SDL_WINDOW_SHOWN);
+#endif
 		if (window == nullptr)
 			SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Window could not be created! SDL_Error: %s\n", SDL_GetError());
 		else
