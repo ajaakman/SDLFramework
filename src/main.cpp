@@ -26,19 +26,24 @@ int main(int argc, char* args[])
 		{
 			SDL_Log("Warning: Linear texture filtering not enabled!");
 		}
-#ifndef NOT_FULLSCREEN
+#ifdef __ANDROID__
 		SDL_DisplayMode displayMode;
 		if (SDL_GetCurrentDisplayMode(0, &displayMode) == 0)		
 			window = SDL_CreateWindow("SDL Framework", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, displayMode.w, displayMode.h, SDL_WINDOW_SHOWN);
+		else
+			SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Could not get display mode for video display #%d: %s", 0, SDL_GetError());
+#else
+		window = SDL_CreateWindow("SDL Framework", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1024, 576, SDL_WINDOW_SHOWN);
 #endif
 		if (window == nullptr)
 			SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Window could not be created! SDL_Error: %s\n", SDL_GetError());
 		else
 		{
-			surface = SDL_GetWindowSurface(window);
-			SDL_FillRect(surface, nullptr, SDL_MapRGB(surface->format, 0xFF, 0x00, 0xFF));
-
-			SDL_UpdateWindowSurface(window);
+            SDL_Renderer* gRenderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+            if( gRenderer == NULL )
+                SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
+			else      
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
 
 			bool quit = false;
 
@@ -48,11 +53,30 @@ int main(int argc, char* args[])
 #else
 			while (!quit) {
 #endif
+
 				while (SDL_PollEvent(&e) != 0)
 				{
 					if (e.type == SDL_QUIT)
 						quit = true;
+#ifdef __ANDROID__
+					if (e.type == SDL_FINGERDOWN)
+#else
+					if (e.type == SDL_MOUSEBUTTONDOWN)					
+						if (e.button.button == SDL_BUTTON_LEFT)
+#endif						
+							SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0xFF, 0xFF);
+#ifdef __ANDROID__
+					if (e.type == SDL_FINGERUP)
+#else
+					if (e.type == SDL_MOUSEBUTTONUP)
+						if (e.button.button == SDL_BUTTON_LEFT)
+#endif						
+							SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
 				}
+				
+				SDL_RenderClear(gRenderer);
+				SDL_RenderPresent(gRenderer);
+
 			}
 #ifdef __EMSCRIPTEN__
 			; emscripten_set_main_loop_arg(dispatch_main, &mainLoop, 0, 1);
