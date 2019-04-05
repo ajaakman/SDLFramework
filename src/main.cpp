@@ -11,6 +11,25 @@
 
 #include <SDL.h>
 
+struct AudioData
+{
+	double dTime = 0.0;
+};
+
+void MyAudioCallback(void* userdata, Uint8* stream, int streamLength) // streamLength = samples * channels * bitdepth/8
+{
+	AudioData* audio = static_cast<AudioData*>(userdata);
+
+	for (Uint32 i = 0; i < streamLength / 2; ++i)
+	{
+		((Sint16*)stream)[i] = 0;
+
+		((Sint16*)stream)[i] += Sint16(sin(440.0 * 6.28318530 * audio->dTime) * 32767);
+			
+		audio->dTime += 1.0 / 41000.0;
+	}		
+}
+
 
 int main(int argc, char* args[])
 {
@@ -18,7 +37,7 @@ int main(int argc, char* args[])
 	SDL_Window* window = nullptr;
 	SDL_Surface* surface = nullptr;
 
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 	else
 	{
@@ -44,6 +63,26 @@ int main(int argc, char* args[])
                 SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
 			else      
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
+
+			SDL_AudioSpec spec;
+			SDL_AudioDeviceID device;
+			AudioData audioData;
+
+			SDL_memset(&spec, 0, sizeof(spec));
+
+			spec.userdata = &audioData;
+			spec.channels = 1;
+			spec.freq = 44100;
+			spec.format = AUDIO_S16SYS;
+			spec.samples = 2048;
+			spec.callback = MyAudioCallback;
+
+			device = SDL_OpenAudioDevice(NULL, 0, &spec, NULL, 0);
+
+			if (device == 0)
+				SDL_LogError(SDL_LOG_CATEGORY_AUDIO, "Could not open audio device %s\n", SDL_GetError());
+
+			SDL_PauseAudioDevice(device, 0);
 
 			bool quit = false;
 
