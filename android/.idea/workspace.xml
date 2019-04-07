@@ -11,6 +11,7 @@
       <change beforePath="$PROJECT_DIR$/.gradle/4.10.2/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.2/taskHistory/taskHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/jni/Application.mk" beforeDir="false" afterPath="$PROJECT_DIR$/app/jni/Application.mk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../src/main.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -63,14 +64,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="876">
-              <caret line="112" column="45" selection-start-line="112" selection-start-column="45" selection-end-line="112" selection-end-column="45" />
+            <state relative-caret-position="11135">
+              <caret line="655" column="25" selection-start-line="655" selection-start-column="25" selection-end-line="655" selection-end-column="25" />
               <folding>
                 <element signature="e#23#197#0" expanded="true" />
-                <element signature="e#1490#1612#0" expanded="true" />
-                <element signature="e#1741#1781#0" expanded="true" />
-                <element signature="e#2380#2465#0" expanded="true" />
-                <element signature="e#2608#2686#0" expanded="true" />
+                <element signature="e#15528#15650#0" expanded="true" />
+                <element signature="e#16721#16761#0" expanded="true" />
+                <element signature="e#16949#17034#0" expanded="true" />
+                <element signature="e#17263#17341#0" expanded="true" />
                 <element signature="e#2333#2396#0" expanded="true" />
               </folding>
             </state>
@@ -89,7 +90,7 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
     <option name="width" value="1689" />
@@ -246,8 +247,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
       <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.32995737" />
@@ -280,14 +280,14 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/../src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="876">
-          <caret line="112" column="45" selection-start-line="112" selection-start-column="45" selection-end-line="112" selection-end-column="45" />
+        <state relative-caret-position="11135">
+          <caret line="655" column="25" selection-start-line="655" selection-start-column="25" selection-end-line="655" selection-end-column="25" />
           <folding>
             <element signature="e#23#197#0" expanded="true" />
-            <element signature="e#1490#1612#0" expanded="true" />
-            <element signature="e#1741#1781#0" expanded="true" />
-            <element signature="e#2380#2465#0" expanded="true" />
-            <element signature="e#2608#2686#0" expanded="true" />
+            <element signature="e#15528#15650#0" expanded="true" />
+            <element signature="e#16721#16761#0" expanded="true" />
+            <element signature="e#16949#17034#0" expanded="true" />
+            <element signature="e#17263#17341#0" expanded="true" />
             <element signature="e#2333#2396#0" expanded="true" />
           </folding>
         </state>
