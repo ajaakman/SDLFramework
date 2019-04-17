@@ -619,6 +619,8 @@ int main(int argc, char* args[])
 
 			SDL_PauseAudioDevice(device, 0);
 
+			SDL_Rect fillRect = { 1024 / 4, 576 / 4, 1024 / 2, 576 / 2 };
+
 			bool quit = false;
 
 			SDL_Event e;
@@ -627,7 +629,9 @@ int main(int argc, char* args[])
 #else
 			while (!quit) {
 #endif
-
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+				SDL_RenderClear(gRenderer);
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
 				while (SDL_PollEvent(&e) != 0)
 				{
 					if (e.type == SDL_QUIT)
@@ -655,8 +659,8 @@ int main(int argc, char* args[])
 							audioData.NoteReleased(5);
 						}
 				}
-				
-				SDL_RenderClear(gRenderer);
+
+				SDL_RenderFillRect(gRenderer, &fillRect);				
 				SDL_RenderPresent(gRenderer);
 
 			}
