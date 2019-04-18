@@ -11,6 +11,10 @@
 
 #include <SDL.h>
 #include <vector>
+#include <array>
+#include <list>
+#include <iostream>
+#include <utility>
 
 #define SINE_WAVE 0
 #define SQUARE_WAVE 1
@@ -18,6 +22,151 @@
 #define TRIANGLE_WAVE 3
 #define ANALOG_SAW 4
 #define NOISE 5
+
+#define NUM_OF_KEYS 16
+	
+SDL_Window* window = nullptr;
+SDL_Surface* surface = nullptr;
+SDL_Renderer* gRenderer = nullptr;
+
+std::list<std::pair<SDL_FingerID,int>> touches;
+
+std::array<SDL_Rect, NUM_OF_KEYS> m_PianoKeys;
+std::array<bool, NUM_OF_KEYS> m_bIsKeyPressed;
+int m_nNumofWhiteKeys = 0;
+
+bool IsKeyWhite(int nKey)
+{
+	nKey %= 12;
+	if (nKey == 0 || nKey == 2 || nKey == 4 || nKey == 5 || nKey == 7 || nKey == 9 || nKey == 11)
+		return true;
+	else
+		return false;
+}
+
+bool IsBlackKeySkip(int nKey)
+{
+	nKey %= 12;
+	if (nKey == 3 || nKey == 10)
+		return true;
+	else
+		return false;
+}
+
+void CalculateLayout()
+{	
+	if (window != nullptr)
+	{
+		int width, height;
+		SDL_GetWindowSize(window, &width, &height);
+		
+#ifdef __ANDROID__
+		int j = 0;
+		for (int i = 0; i < m_PianoKeys.size(); ++i)
+		{
+			if (IsKeyWhite(i)) // White Keys
+			{
+				m_PianoKeys[i] = SDL_Rect({ (width / 100),
+											(height / 300) + (height / m_nNumofWhiteKeys * j),
+											width - (width / 100 * 2) ,
+											height / m_nNumofWhiteKeys - (height / 300 * 2) });
+				++j;
+			}			
+		}
+		j = 0;
+		for (int i = 0; i < m_PianoKeys.size(); ++i)
+		{
+			if (!IsKeyWhite(i))
+			{
+				m_PianoKeys[i] = SDL_Rect({ (width / 3) - (width / 100),
+											(height / 300) + (height / m_nNumofWhiteKeys * j) + ((int)((height / m_nNumofWhiteKeys - (height / 300 * 2)) / 1.5)),
+											width - (width / 3) ,
+											(int)((height / m_nNumofWhiteKeys - (height / 300 * 2)) / 1.5) });
+				if (IsBlackKeySkip(i)) j += 2;
+				else ++j;
+			}
+		}
+#else	
+		int j = 0;
+		for (int i = 0; i < m_PianoKeys.size(); ++i)
+		{
+			if (IsKeyWhite(i)) // White Keys
+			{
+				m_PianoKeys[i] = SDL_Rect({ (width / 300) + (width / m_nNumofWhiteKeys * j),
+											(height / 100) ,
+											width / m_nNumofWhiteKeys - (width / 300 * 2),
+											height - (height / 100 * 2) });
+			++j;
+			}
+		}
+		j = 0;
+		for (int i = 0; i < m_PianoKeys.size(); ++i)
+		{
+			if (!IsKeyWhite(i)) // White Keys
+			{
+				m_PianoKeys[i] = SDL_Rect({ (width / 300) + (width / m_nNumofWhiteKeys * j) + ((int)((width / m_nNumofWhiteKeys - (width / 300 * 2)) / 1.5) ),
+											(height / 100) ,
+											(int)((width / m_nNumofWhiteKeys - (width / 300 * 2))/1.5),
+											height - (height / 3) });
+				if (IsBlackKeySkip(i)) j += 2;
+				else ++j;
+			}
+		}
+#endif
+	}
+}
+
+void DrawKeys()
+{
+	for (unsigned int i = 0; i < m_PianoKeys.size(); ++i)
+	{
+		if (IsKeyWhite(i))
+		{
+			if (m_bIsKeyPressed[i])
+				SDL_SetRenderDrawColor(gRenderer, 0xAA, 0xAA, 0xAA, 0xFF);
+			else
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+				
+			SDL_RenderFillRect(gRenderer, &m_PianoKeys[i]);
+		}
+	}	
+	
+	for (unsigned int i = 0; i < m_PianoKeys.size(); ++i)
+	{
+		if (!IsKeyWhite(i))
+		{
+			if (m_bIsKeyPressed[i])
+				SDL_SetRenderDrawColor(gRenderer, 0xAA, 0xAA, 0xAA, 0xFF);
+			else
+				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+
+			SDL_RenderFillRect(gRenderer, &m_PianoKeys[i]);
+		}
+	}
+}
+
+int HitTest(const int & x, const int & y)
+{
+	for (int i = 0; i < m_PianoKeys.size(); ++i)
+	{
+		if (!IsKeyWhite(i))
+		{
+			if (x > m_PianoKeys[i].x && x < (m_PianoKeys[i].x + m_PianoKeys[i].w) && y > m_PianoKeys[i].y && y < (m_PianoKeys[i].y + m_PianoKeys[i].h))
+				return i;
+		}
+	}
+
+	for (int i = 0; i < m_PianoKeys.size(); ++i)
+	{
+		if (IsKeyWhite(i))
+		{
+			if (x > m_PianoKeys[i].x && x < (m_PianoKeys[i].x + m_PianoKeys[i].w) && y > m_PianoKeys[i].y && y < (m_PianoKeys[i].y + m_PianoKeys[i].h))
+				return i;
+		}
+	}
+
+	return -1;
+}
 
 SDL_AudioDeviceID device;
 
@@ -565,12 +714,9 @@ void MyAudioCallback(void* userdata, Uint8* stream, int streamLength) // streamL
 	}		
 }
 
-
 int main(int argc, char* args[])
 {
 	SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Running...\n");
-	SDL_Window* window = nullptr;
-	SDL_Surface* surface = nullptr;
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
@@ -592,8 +738,8 @@ int main(int argc, char* args[])
 		if (window == nullptr)
 			SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Window could not be created! SDL_Error: %s\n", SDL_GetError());
 		else
-		{
-            SDL_Renderer* gRenderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
+		{			
+            gRenderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC );
             if( gRenderer == NULL )
                 SDL_LogError(SDL_LOG_CATEGORY_VIDEO, "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
 			else      
@@ -609,7 +755,7 @@ int main(int argc, char* args[])
 			spec.channels = 1;
 			spec.freq = 44100;
 			spec.format = AUDIO_S16SYS;
-			spec.samples = 2048;
+			spec.samples = 512;
 			spec.callback = MyAudioCallback;
 
 			device = SDL_OpenAudioDevice(NULL, 0, &spec, NULL, 0);
@@ -618,8 +764,13 @@ int main(int argc, char* args[])
 				SDL_LogError(SDL_LOG_CATEGORY_AUDIO, "Could not open audio device %s\n", SDL_GetError());
 
 			SDL_PauseAudioDevice(device, 0);
+			// ----------------------------------------------------------------------
+			for (unsigned int i = 0; i < m_PianoKeys.size(); ++i)			
+				if (IsKeyWhite(i)) 
+					m_nNumofWhiteKeys += 1;
 
-			SDL_Rect fillRect = { 1024 / 4, 576 / 4, 1024 / 2, 576 / 2 };
+			CalculateLayout();
+			// ----------------------------------------------------------------------
 
 			bool quit = false;
 
@@ -629,9 +780,8 @@ int main(int argc, char* args[])
 #else
 			while (!quit) {
 #endif
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+				SDL_SetRenderDrawColor(gRenderer, 0x88, 0x88, 0x88, 0xFF);
 				SDL_RenderClear(gRenderer);
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
 				while (SDL_PollEvent(&e) != 0)
 				{
 					if (e.type == SDL_QUIT)
@@ -643,9 +793,25 @@ int main(int argc, char* args[])
 						if (e.button.button == SDL_BUTTON_LEFT)
 #endif						
 						{
-							SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0xFF, 0xFF);
-							audioData.NoteTriggered(1);
-							audioData.NoteTriggered(5);
+							int x, y;
+#ifdef __ANDROID__
+							int width, height;
+							SDL_GetWindowSize(window, &width, &height);
+							x = e.tfinger.x * width;
+							y = e.tfinger.y * height;
+#else
+							SDL_GetMouseState(&x, &y);
+#endif
+
+							int ht = HitTest(x, y);
+							if (ht != -1)
+							{
+								audioData.NoteTriggered(ht);
+								m_bIsKeyPressed[ht] = true;
+#ifdef __ANDROID__
+								touches.push_back(std::pair<SDL_FingerID, int>(e.tfinger.fingerId, ht));
+#endif
+							}							
 						}
 #ifdef __ANDROID__
 					if (e.type == SDL_FINGERUP)
@@ -654,13 +820,30 @@ int main(int argc, char* args[])
 						if (e.button.button == SDL_BUTTON_LEFT)
 #endif						
 						{
-							SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
-							audioData.NoteReleased(1);
-							audioData.NoteReleased(5);
+#ifdef __ANDROID__
+							for (auto it = touches.begin(); it != touches.end(); ++it)
+							{
+								if (it->first == e.tfinger.fingerId)
+								{
+									audioData.NoteReleased(it->second);
+									m_bIsKeyPressed[it->second] = false;
+									touches.erase(it);
+									break;
+								}
+							}
+#else
+							int x, y;
+							SDL_GetMouseState(&x, &y);
+							int ht = HitTest(x, y);
+							if (ht != -1)
+							{
+								audioData.NoteReleased(ht);
+								m_bIsKeyPressed[ht] = false;
+							}
+#endif
 						}
 				}
-
-				SDL_RenderFillRect(gRenderer, &fillRect);				
+				DrawKeys();				
 				SDL_RenderPresent(gRenderer);
 
 			}
